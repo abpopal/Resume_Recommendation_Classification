@@ -15,6 +15,9 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer, PorterStemmer
 import string
 import re
+from os import walk
+import shutil, os
+
 
 # -------------------------------data preprocess 
 stemmer = SnowballStemmer("english")
@@ -34,54 +37,41 @@ def preprocess(text):
     text = ' '.join(new_text)
     return text
 
+# recommender - returns percentage of similarity between cv and Job Description
+def recommender(cv, jobD):
+        
+        docs = [cv, jobD]
+        count_vector = CountVectorizer()
+        count_matrix = count_vector.fit_transform(docs)
+        
+        similarity = cosine_similarity(count_matrix)
+        
+        return round(similarity[0][1] * 100, 2)
 
-processed_cv = preprocess(docx2txt.process('resume.docx'))
+        
 
-unProcessed_cv = docx2txt.process('resume.docx')
+cv_process = preprocess(docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx"))
+cv_unprocess = docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx")
 
-processed_jobD = preprocess(docx2txt.process('jobdescription.docx'))
+jobD_process = preprocess(docx2txt.process("Software Engineer Job Description.docx"))
+jobD_unprocess = docx2txt.process("Software Engineer Job Description.docx")
 
-unProcessed_jobD = docx2txt.process('jobdescription.docx')
+print("processed data percentage",recommender(cv_process, jobD_process))
+print("Unprocessed data percentage",recommender(cv_unprocess, jobD_unprocess))
 
-unprocessed_docs = [unProcessed_cv, unProcessed_jobD]
+f = []
+recommended = []
+for (dirpath, dirnames, filenames) in walk('received/'):
+    f.extend(filenames)
+    break
 
-processed_docs = [processed_cv, processed_jobD]
-
-
-cv_processed = CountVectorizer()
-cv_Unprocessed = CountVectorizer()
-
-
-
-count_matrix_processed = cv_processed.fit_transform(processed_docs)
-count_matrix_unprocessed = cv_Unprocessed.fit_transform(unprocessed_docs)
-
-similarity_processed = cosine_similarity(count_matrix_processed)
-similarity_unprocessed = cosine_similarity(count_matrix_unprocessed)
-
-
-process_percentage = round(similarity_processed[0][1] * 100, 2)
-unprocess_percentage = round(similarity_unprocessed[0][1] * 100, 2)
-
-print("processed docs similarity: ", process_percentage)
-print("unprocess docs similarity: ", unprocess_percentage)
-"""
-
-resume = docx2txt.process('resume.docx')
-
-job_description = docx2txt.process('jobdescription.docx')
-
-
-text = [resume, job_description]
-
-cv = CountVectorizer()
-
-count_matrix = cv.fit_transform(text)
-
-similarity = cosine_similarity(count_matrix)
-
-match_percentage = round(similarity[0][1] * 100, 2)
-
-print(match_percentage)
-
-"""
+for x in range(len(f)):
+    match = recommender(preprocess(docx2txt.process(f[x])), preprocess(docx2txt.process("Software Engineer Job Description.docx")))
+    print("match for: ", f[x], "is: ", match)
+    if  match > 45:
+        recommended.append(f[x])
+for f in recommended:
+    shutil.copy(f, 'recommended')
+        
+print(f)
+print("recommended cv",recommended)
