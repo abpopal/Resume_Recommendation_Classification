@@ -61,17 +61,26 @@ print("Unprocessed data percentage",recommender(cv_unprocess, jobD_unprocess))
 
 f = []
 recommended = []
+jobDescription = preprocess(docx2txt.process("Software Engineer Job Description.docx"))
 for (dirpath, dirnames, filenames) in walk('received/'):
     f.extend(filenames)
     break
-
-for x in range(len(f)):
-    match = recommender(preprocess(docx2txt.process(f[x])), preprocess(docx2txt.process("Software Engineer Job Description.docx")))
-    print("match for: ", f[x], "is: ", match)
+#print("done ", f)
+    
+print("\nresumes received")
+print("\nrecommender running")  
+for x in f:
+    filename = 'received/'+x
+    #print("file name is ", filename)
+    #print("the value for x is: ", x)
+    match = recommender(preprocess(docx2txt.process(filename)),jobDescription)
+    print("\nmatch for: ", x, "is: ", match)
     if  match > 45:
-        recommended.append(f[x])
+        recommended.append(filename)
+        
+   
+#print(recommended)
 for f in recommended:
     shutil.copy(f, 'recommended')
-        
-print(f)
-print("recommended cv",recommended)
+    
+print("\nresumes saved to recommended folder!!")
