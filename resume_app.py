@@ -50,14 +50,14 @@ def recommender(cv, jobD):
 
         
 
-cv_process = preprocess(docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx"))
-cv_unprocess = docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx")
+#cv_process = preprocess(docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx"))
+#cv_unprocess = docx2txt.process("Elliot-Alderson-Resume-Software-Developer-2.docx")
 
-jobD_process = preprocess(docx2txt.process("Software Engineer Job Description.docx"))
-jobD_unprocess = docx2txt.process("Software Engineer Job Description.docx")
+#jobD_process = preprocess(docx2txt.process("Software Engineer Job Description.docx"))
+#jobD_unprocess = docx2txt.process("Software Engineer Job Description.docx")
 
-print("processed data percentage",recommender(cv_process, jobD_process))
-print("Unprocessed data percentage",recommender(cv_unprocess, jobD_unprocess))
+#print("processed data percentage",recommender(cv_process, jobD_process))
+#print("Unprocessed data percentage",recommender(cv_unprocess, jobD_unprocess))
 
 f = []
 recommended = []
